@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "541245274648",
+    "project_id": "purulia-bus",
+    "storage_bucket": "purulia-bus.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541245274648:android:ee87db480d7978822ee16d",
+        "android_client_info": {
+          "package_name": "com.example.hello_world"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyKEoEfV_nASAJyGjiLuMPVRrknvCW8WY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541245274648:android:e5d56ab2a0ee3cec2ee16d",
+        "android_client_info": {
+          "package_name": "com.rishappe.puruliabus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyKEoEfV_nASAJyGjiLuMPVRrknvCW8WY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541245274648:android:7b3b3bd9ec9b1f7e2ee16d",
+        "android_client_info": {
+          "package_name": "com.rishikumarmahato.purulia_bus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyKEoEfV_nASAJyGjiLuMPVRrknvCW8WY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
