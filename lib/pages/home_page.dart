@@ -22,6 +22,31 @@ class HomePage extends StatelessWidget {
     ).showSnackBar(SnackBar(content: Text('$feature is coming soon')));
   }
 
+  // NEW: Shows a popup explaining that this app is NOT an official
+  // government app. Google wants this disclaimer to be easy to see.
+  void _showAbout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('About Purulia Bus'), // popup heading
+        content: const Text(
+          'Purulia Bus is an independent, unofficial app. It is NOT a '
+          'government app and does not represent any government entity '
+          'or bus operator.\n\n'
+          'Timings are approximate and may be out of date. Please verify '
+          'at the bus stand before you travel.',
+        ),
+        actions: [
+          // Closes the popup when pressed
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,13 +105,18 @@ class HomePage extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
+                          // CHANGED: the old "Govt. Bus" card (SBSTC & WBTC)
+                          // is now an "About" card. Google rejected the app
+                          // because the old card looked like an official
+                          // government service.
                           child: _CategoryCard(
-                            icon: Icons.account_balance,
-                            title: 'Govt. Bus',
-                            subtitle: 'SBSTC & WBTC\nservices',
+                            icon: Icons.info_outline, // "i" icon
+                            title: 'About',
+                            subtitle: 'Unofficial app &\ndata source',
                             colors: const [AppColors.green, Color(0xFF13803F)],
-                            enabled: false,
-                            onTap: () => _showComingSoon(context, 'Govt. Bus'),
+                            // enabled stays true (the default), so this card
+                            // works and has no "Coming soon" badge.
+                            onTap: () => _showAbout(context), // opens popup
                           ),
                         ),
                         const SizedBox(width: 14),
@@ -120,10 +150,17 @@ class HomePage extends StatelessWidget {
 
                     const SizedBox(height: 28),
 
-                    // Important while your data is not fully verified.
+                    // NEW: the second photo, a wide banner with a short slogan.
+                    _buildBanner(),
+
+                    const SizedBox(height: 20),
+
+                    // CHANGED: the footer now also says the app is unofficial.
                     const Center(
                       child: Text(
-                        'Times are approximate. Verify at the bus stand before travel.',
+                        'Unofficial app. Not affiliated with any government '
+                        'body or bus operator. Times are approximate. '
+                        'Verify at the bus stand before travel.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12,
@@ -188,6 +225,38 @@ class HomePage extends StatelessWidget {
               child: CustomPaint(painter: _HillsPainter()),
             ),
 
+            // NEW: 2b. The header photo. Positioned.fill stretches it over the
+            // whole header. BoxFit.cover crops it so it never looks squashed.
+            // errorBuilder runs if the picture file is missing, and we show
+            // nothing, so the gradient and hills above stay visible instead
+            // of the app crashing.
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/header_bg.jpg',
+                fit: BoxFit.cover,
+                // TEMPORARY: prints the real error on the screen.
+                // Change back to SizedBox.shrink() once the photo loads.
+                errorBuilder: (context, error, stackTrace) => Text(
+                  '$error',
+                  style: const TextStyle(color: Colors.yellow, fontSize: 11),
+                ),
+              ),
+            ),
+            // NEW: 2c. A dark tint on top of the photo so the white text is
+            // easy to read. It is darker at the top and lighter at the bottom.
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    // 0xCC = mostly dark, 0x33 = mostly see-through
+                    colors: [Color(0xCC0D3B6E), Color(0x330D3B6E)],
+                  ),
+                ),
+              ),
+            ),
+
             // 3. The text (at the front). This is the only child that is not
             // Positioned, so its size decides the height of the whole header.
             // The big bottom padding leaves room for the hills below the text.
@@ -198,8 +267,10 @@ class HomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // CHANGED: the old Bengali text sounded like an official
+                    // timetable. This one says "Purulia Bus Guide (Unofficial)".
                     const Text(
-                      'পুরুলিয়া জেলা বাস সময়সূচী',
+                      'পুরুলিয়া বাস গাইড (অনানুষ্ঠানিক)',
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 13,
@@ -222,6 +293,73 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ---------- NEW: wide photo banner with a short slogan ----------
+  Widget _buildBanner() {
+    // ClipRRect rounds the corners of the photo.
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: SizedBox(
+        width: double.infinity,
+        height: 150, // banner height in pixels
+        child: Stack(
+          children: [
+            // The photo. If the file is missing, a green gradient is shown.
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/banner.jpg', // your second photo
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.green, Color(0xFF13803F)],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Dark tint at the bottom so the text is readable.
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0x00000000), Color(0xAA000000)],
+                  ),
+                ),
+              ),
+            ),
+
+            // The slogan, pinned to the bottom-left corner.
+            const Positioned(
+              left: 16,
+              bottom: 14,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Explore Purulia',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'Know your bus timings before you go',
+                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                  ),
+                ],
               ),
             ),
           ],

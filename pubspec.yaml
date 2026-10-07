@@ -56,6 +56,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
+  # Assets are disabled until a valid asset directory exists.
+  # Add valid asset folders here when they are created.
+  assets:
+    - assets/images/
 
 # The two blocks below start at column 0, with NO spaces before them.
 flutter_launcher_icons:
